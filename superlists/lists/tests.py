@@ -1,5 +1,5 @@
 from django.core.urlresolvers import resolve
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 
@@ -32,22 +32,15 @@ class HomePageTest(TestCase):
         self.assertEqual(new_item.text, 'A new list item')
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
+        self.assertEqual(
+            response['location'],
+            '/lists/the-only-list-in-the-world/'
+        )
 
     def test_home_page_only_saves_items_when_necessary(self):
         request = HttpRequest()
         home_page(request)
         self.assertEqual(Item.objects.all().count(), 0)
-
-    def test_home_page_displays_all_list_items(self):
-        Item.objects.create(text='itemey 1')
-        Item.objects.create(text='itemey 2')
-
-        request = HttpRequest()
-        response = home_page(request)
-
-        self.assertIn('itemey 1', response.content.decode())
-        self.assertIn('itemey 2', response.content.decode())
 
 class ItemModelTest(TestCase):
 
@@ -67,3 +60,16 @@ class ItemModelTest(TestCase):
         second_saved_item = saved_items[1]
         self.assertEqual(first_saved_item.text, 'The first (ever) list item')
         self.assertEqual(second_saved_item.text, 'Item the second')
+
+class ListViewTest(TestCase):
+
+    def test_list_view_dispalys_all_items(self):
+        Item.objects.create(text='itemey 1')
+        Item.objects.create(text='itemey 2')
+
+        client = Client()
+        response = client.get('/lists/the-only-list-in-the-world/')
+
+        self.assertContains(response, 'itemey 1')
+        self.assertContains(response, 'itemey 2')
+        self.assertTemplateUsed(response, 'list.html')
