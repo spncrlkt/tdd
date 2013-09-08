@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 
+
 class NewVisitorTest(unittest.TestCase):
 
     def setUp(self):
@@ -59,7 +60,6 @@ class NewVisitorTest(unittest.TestCase):
         # Explanatory exists for the unique url
 
         # U visits uniq url, the list is still there
-
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
