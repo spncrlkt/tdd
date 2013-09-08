@@ -16,15 +16,28 @@ class NewVisitorTest(unittest.TestCase):
 
         # U notices the page title and header mention to do lists
         self.assertIn('To-Do', self.browser.title)
-        self.fail('Finish the test')
+        header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertIn('To-Do',header_text)
 
         # U is invited to enter a to-do item straight away
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertEqual(
+                inputbox.get_attribute('placeholder'),
+                'Enter a to-do item'
+        )
 
-        # U typus "Buy peacokc feathers" into a text box
+        # U types "Buy peacock feathers" into a text box
+        inputbox.send_keys('Buy peacock feathers')
 
         # When U hits enter, the page lists "1: Buy peacock feathers" in a to-do list
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.asserttrue(
+            any(row.text == '1: Buy peacock feathers' for row in rows)
+        )
 
         # Text box intives U to add another item
+        self.fail('Finish the test!')
 
         # U enters "Use peacock feathers to make a fly"
 
