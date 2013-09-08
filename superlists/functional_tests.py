@@ -5,14 +5,14 @@ class NewVisitorTest(unittest.TestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
+        self.browser.implicitly_wait(6)
 
     def tearDown(self):
         self.browser.quit()
 
     def test_can_start_a_list_and_reterive_it_later(self):
-        browser = webdriver.Firefox()
-        browser.get('http://localhost:8000')
+        self.browser = webdriver.Firefox()
+        self.browser.get('http://localhost:8000')
 
         # U notices the page title and header mention to do lists
         self.assertIn('To-Do', self.browser.title)
