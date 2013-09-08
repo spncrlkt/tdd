@@ -55,9 +55,29 @@ class NewVisitorTest(LiveServerTestCase):
             '2: Use peacock feathers to make a fly'
         )
 
+        # new U shouldn't see prev U's
+        self.browser.quit()
 
+        self.browser = webdriver.Firefox()
 
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertNotIn('make a fly', page_text)
+
+        # make a new item , ensure that the url is distinct from user_list_url
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy milk')
+        inputbox.send_keys(Keys.ENTER)
+
+        # When new U hits enter, the page lists "1: Buy peacock feathers" in a to-do list
+        user_2_list_url = self.browser.current_url
+        self.assertRegex(user_2_list_url, '/lists/.+')
+        self.assertNotEqual(user_2_list_url, user_list_url)
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertIn('Buy milk', page_text)
 
         # Explanatory exists for the unique url
+        self.fail('Finish the tests')
 
         # U visits uniq url, the list is still there
