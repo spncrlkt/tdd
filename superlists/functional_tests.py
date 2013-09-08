@@ -32,8 +32,9 @@ class NewVisitorTest(unittest.TestCase):
         # When U hits enter, the page lists "1: Buy peacock feathers" in a to-do list
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.asserttrue(
-            any(row.text == '1: Buy peacock feathers' for row in rows)
+        self.assertTrue(
+            any(row.text == '1: Buy peacock feathers' for row in rows),
+            "New to-do item did not appear in table"
         )
 
         # Text box intives U to add another item
