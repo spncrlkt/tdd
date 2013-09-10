@@ -1,7 +1,7 @@
 from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-
+import time
 
 class NewVisitorTest(LiveServerTestCase):
 
@@ -42,7 +42,6 @@ class NewVisitorTest(LiveServerTestCase):
         user_list_url = self.browser.current_url
         self.assertRegex(user_list_url, '/lists/.+')
         self.check_for_row_in_list_table('1: Buy peacock feathers')
-
         # Text box intives U to add another item
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Use peacock feathers to make a fly')
@@ -74,10 +73,10 @@ class NewVisitorTest(LiveServerTestCase):
         user_2_list_url = self.browser.current_url
         self.assertRegex(user_2_list_url, '/lists/.+')
         self.assertNotEqual(user_2_list_url, user_list_url)
+
+        page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy peacock feathers', page_text)
         self.assertIn('Buy milk', page_text)
 
         # Explanatory exists for the unique url
-        self.fail('Finish the tests')
-
         # U visits uniq url, the list is still there
