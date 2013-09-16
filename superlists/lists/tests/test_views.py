@@ -1,4 +1,5 @@
 from django.core.urlresolvers import resolve
+from django.utils.html import escape
 from django.test import TestCase, Client
 from django.http import HttpRequest
 from django.template.loader import render_to_string
@@ -64,6 +65,13 @@ class NewListTest(TestCase):
         self.assertEqual(new_item.list, new_list)
 
         self.assertRedirects(response, '/lists/%d/' % (new_list.id,))
+
+    def test_validation_errors_sent_back_to_home_page_template(self):
+        response = Client().post('/lists/new', data={'item_text': ''})
+        self.assertEqual(Item.objects.all().count(), 0)
+        self.assertTemplateUsed(response, 'home.html')
+        expected_error = escape("You can't have an empty list item")
+        self.assertContains(response, expected_error)
 
 class NewItemTest(TestCase):
 
