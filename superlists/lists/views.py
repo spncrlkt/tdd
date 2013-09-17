@@ -9,6 +9,9 @@ def home_page(request):
 
 def view_list(request, list_id):
     list = List.objects.get(id=list_id)
+    if request.method == 'POST':
+        Item.objects.create(text=request.POST['item_text'], list=list)
+        return redirect('/lists/%d/' % (list.id,))
     return render(request, 'list.html', {'list':list})
 
 def new_list(request):
@@ -18,9 +21,4 @@ def new_list(request):
     except ValidationError:
         error_text = "You can't have an empty list item"
         return render(request, 'home.html', {"error": error_text})
-    return redirect('/lists/%d/' % (list.id,))
-
-def add_item(request, list_id):
-    list = List.objects.get(id=list_id)
-    Item.objects.create(text=request.POST['item_text'], list=list)
     return redirect('/lists/%d/' % (list.id,))
