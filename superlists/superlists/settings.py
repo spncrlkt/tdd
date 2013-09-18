@@ -128,6 +128,7 @@ INSTALLED_APPS = (
     'lists',
     'functional_tests',
     'django_extensions',
+    'django_nose',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -158,3 +159,5 @@ LOGGING = {
         },
     }
 }
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
