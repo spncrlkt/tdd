@@ -63,7 +63,7 @@ class ListViewTest(TestCase):
 
         self.assertRedirects(response, '/lists/%d/' % (list.id,))
 
-    def test_validation_errors_end_up_on_lists_page(self):
+    def test_empty_item_validation_errors_end_up_on_lists_page(self):
         list = List.objects.create()
 
         response = Client().post(
@@ -73,6 +73,19 @@ class ListViewTest(TestCase):
         self.assertEqual(Item.objects.all().count(), 0)
         self.assertTemplateUsed(response, 'list.html')
         expected_error = escape("You can't have an empty list item")
+        self.assertContains(response, expected_error)
+
+    def test_duplicate_item_validation_errors_end_up_on_lists_page(self):
+        list1 = List.objects.create()
+        item1 = Item.objects.create(list=list1, text='textey')
+
+        response = Client().post(
+            '/lists/%d/' % (list1.id,),
+            data={'item_text':'textey'}
+        )
+        self.assertEqual(Item.objects.all().count(), 1)
+        self.assertTemplateUsed(response, 'list.html')
+        expected_error = escape("You've already got this in your list")
         self.assertContains(response, expected_error)
 
 class NewListTest(TestCase):
