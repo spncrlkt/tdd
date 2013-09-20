@@ -14,14 +14,14 @@ class NewVisitorTest(FunctionalTest):
         self.assertIn('To-Do',header_text)
 
         # U is invited to enter a to-do item straight away
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.get_item_input_box()
         self.assertEqual(
                 inputbox.get_attribute('placeholder'),
                 'Enter a to-do item'
         )
 
         # U types "Buy peacock feathers" into a text box
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.get_item_input_box()
         inputbox.send_keys('Buy peacock feathers')
         inputbox.send_keys(Keys.ENTER)
 
@@ -30,7 +30,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertRegex(user_list_url, '/lists/.+')
         self.check_for_row_in_list_table('1: Buy peacock feathers')
         # Text box intives U to add another item
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.get_item_input_box()
         inputbox.send_keys('Use peacock feathers to make a fly')
         inputbox.send_keys(Keys.ENTER)
 
@@ -52,7 +52,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertNotIn('make a fly', page_text)
 
         # make a new item , ensure that the url is distinct from user_list_url
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.get_item_input_box()
         inputbox.send_keys('Buy milk')
         inputbox.send_keys(Keys.ENTER)
 
